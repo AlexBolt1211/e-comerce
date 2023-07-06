@@ -2,11 +2,11 @@ package com.example.application.services;
 
 import com.example.application.model.Product;
 import com.example.application.repsitories.ProductRepository;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,17 +14,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-    private List<Product> products = new ArrayList<>();
 
-    public List<Product> productList(){return products;};
+    public List<Product> productList(String name){
+        List<Product> products = productRepository.findAll();
+        if(name != null) productRepository.findAllByName(name);
+        return productRepository.findAll();
+    };
 
     public void saveProduct(Product product){
+        log.info("Saving new {}", product);
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id){
+        productRepository.deleteById(id);
     }
 
     public Product getProductById(Long id){
-        return  null;
+        return  productRepository.findById(id).orElse(null);
     }
 }
